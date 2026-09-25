@@ -1,0 +1,123 @@
+{
+  "name": "wdatabase-vscode",
+  "displayName": "WDatabase Tools",
+  "description": "Intelligent control suite & visual tools for the w database ecosystem (wpostgresql, wredis, wsqlite, wtinydb, wmongo, etc.)",
+  "version": "1.0.0",
+  "publisher": "wisrovi",
+  "author": {
+    "name": "William Rodriguez (wisrovi)",
+    "email": "wisrovi.rodriguez@gmail.com",
+    "url": "https://github.com/wisrovi"
+  },
+  "homepage": "https://github.com/wisrovi/wdatabase-vscode",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wisrovi/wdatabase-vscode.git"
+  },
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Visualization",
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:python",
+    "onView:wdatabaseExplorer"
+  ],
+  "main": "./out/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^18.11.9",
+    "@types/vscode": "^1.75.0",
+    "typescript": "^5.0.0"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "wdatabase.refreshExplorer",
+        "title": "WDatabase: Refresh Workspace Scanner",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "wdatabase.previewERD",
+        "title": "WDatabase: Preview DB Entity-Relationship Diagram (ERD)",
+        "icon": "$(graph)"
+      },
+      {
+        "command": "wdatabase.openDashboard",
+        "title": "WDatabase: Open Control Center & Data Inspector",
+        "icon": "$(dashboard)"
+      },
+      {
+        "command": "wdatabase.showCheatSheet",
+        "title": "WDatabase: Show Architect Patterns CheatSheet",
+        "icon": "$(book)"
+      },
+      {
+        "command": "wdatabase.createModelWizard",
+        "title": "WDatabase: Launch Model Generator Wizard",
+        "icon": "$(add)"
+      },
+      {
+        "command": "wdatabase.createConnectionWizard",
+        "title": "WDatabase: Launch Connection Config Wizard",
+        "icon": "$(plug)"
+      },
+      {
+        "command": "wdatabase.testConnection",
+        "title": "WDatabase: Test Database Connectivity",
+        "icon": "$(check)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "wdatabase-sidebar",
+          "title": "WDatabase Tools",
+          "icon": "icon.png"
+        }
+      ]
+    },
+    "views": {
+      "wdatabase-sidebar": [
+        {
+          "id": "wdatabaseExplorer",
+          "name": "Bound DB Models & Engines",
+          "icon": "icon.png"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "WDatabase Tools",
+      "properties": {
+        "wdatabase.excludePaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "**/node_modules/**",
+            "**/.venv/**",
+            "**/venv/**"
+          ],
+          "description": "Glob patterns to exclude when scanning Python files for Pydantic DB models."
+        },
+        "wdatabase.enableForensicBadges": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show forensic audit badges (status=99 soft-delete) on models inheriting from ForensicModel."
+        }
+      }
+    }
+  }
+}
