@@ -13,6 +13,11 @@ import { CheatSheetPanel } from './webviews/cheatSheet';
 import { launchModelWizard } from './wizards/modelWizard';
 import { launchConnectionWizard } from './wizards/connectionWizard';
 
+import { WDatabaseCompletionItemProvider } from './providers/completionProvider';
+import { QueryPlaygroundPanel } from './webviews/queryPlayground';
+import { generateMigrationCommand } from './commands/generateMigrations';
+import { generateTestSuiteCommand } from './commands/generateTests';
+
 export function activate(context: vscode.ExtensionContext): void {
     const workspaceIndex = new WorkspaceIndex();
     const treeProvider = new WDatabaseTreeProvider(workspaceIndex);
@@ -38,6 +43,10 @@ export function activate(context: vscode.ExtensionContext): void {
 
     context.subscriptions.push(
         vscode.languages.registerCodeActionsProvider({ language: 'python', scheme: 'file' }, new WDatabaseCodeActionProvider())
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider({ language: 'python', scheme: 'file' }, new WDatabaseCompletionItemProvider(), 'w')
     );
 
     context.subscriptions.push(diagnostics.getCollection());
@@ -70,7 +79,7 @@ export function activate(context: vscode.ExtensionContext): void {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('wdatabase.previewERD', () => {
+        vscode.commands.registerCommand('wdatabase.previewERD', (model) => {
             ERDPanel.createOrShow(context.extensionUri, workspaceIndex);
         })
     );
@@ -78,6 +87,12 @@ export function activate(context: vscode.ExtensionContext): void {
     context.subscriptions.push(
         vscode.commands.registerCommand('wdatabase.openDashboard', () => {
             DashboardPanel.createOrShow(workspaceIndex);
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.openQueryPlayground', (model) => {
+            QueryPlaygroundPanel.createOrShow(workspaceIndex, model);
         })
     );
 
@@ -93,6 +108,18 @@ export function activate(context: vscode.ExtensionContext): void {
 
     context.subscriptions.push(
         vscode.commands.registerCommand('wdatabase.createConnectionWizard', launchConnectionWizard)
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.generateMigration', (modelName) => {
+            generateMigrationCommand(typeof modelName === 'string' ? modelName : undefined);
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.generateTestSuite', (modelName) => {
+            generateTestSuiteCommand(typeof modelName === 'string' ? modelName : undefined);
+        })
     );
 
     context.subscriptions.push(
