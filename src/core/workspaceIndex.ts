@@ -96,12 +96,12 @@ export class WorkspaceIndex {
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
 
-            // Match class definitions inheriting from BaseModel or ForensicModel
-            const classMatch = line.match(/^class\s+([A-Za-z0-9_]+)\s*\(\s*(ForensicModel|BaseModel|[A-Za-z0-9_\.]+)\s*\)\s*:/);
+            // Match class definitions inheriting from BaseModel, ForensicModel, ForensicDocument, or ForensicTable
+            const classMatch = line.match(/^class\s+([A-Za-z0-9_]+)\s*\(\s*(ForensicModel|ForensicDocument|ForensicTable|BaseModel|[A-Za-z0-9_\.]+)\s*\)\s*:/);
             if (classMatch) {
                 const className = classMatch[1];
                 const baseClass = classMatch[2];
-                const isForensic = baseClass === 'ForensicModel';
+                const isForensic = baseClass.startsWith('Forensic');
 
                 currentModel = {
                     className,
@@ -124,8 +124,8 @@ export class WorkspaceIndex {
                     continue;
                 }
 
-                // Check __tablename__ override
-                const tableMatch = line.match(/__tablename__\s*=\s*["']([^"']+)["']/);
+                // Check __tablename__, __collectionname__, __indexname__, or __keypattern__ override
+                const tableMatch = line.match(/(?:__tablename__|__collectionname__|__indexname__|__keypattern__)\s*=\s*["']([^"']+)["']/);
                 if (tableMatch) {
                     currentModel.tableName = tableMatch[1];
                 }
