@@ -37,6 +37,32 @@ export class WDatabaseCodeLensProvider implements vscode.CodeLensProvider {
                     })
                 );
             }
+            // 3. Migration Action
+            codeLenses.push(
+                new vscode.CodeLens(range, {
+                    title: `$(diff) [Generate Migration]`,
+                    command: 'wdatabase.generateMigration',
+                    arguments: [model.className],
+                })
+            );
+
+            // 4. Test Suite Action
+            codeLenses.push(
+                new vscode.CodeLens(range, {
+                    title: `$(beaker) [Generate Pytest Suite]`,
+                    command: 'wdatabase.generateTestSuite',
+                    arguments: [model.className],
+                })
+            );
+
+            // 5. Query Playground Action
+            codeLenses.push(
+                new vscode.CodeLens(range, {
+                    title: `$(terminal) [Query Playground]`,
+                    command: 'wdatabase.openQueryPlayground',
+                    arguments: [model],
+                })
+            );
         }
 
         return codeLenses;
