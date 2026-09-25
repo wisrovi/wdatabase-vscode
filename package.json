@@ -74,6 +74,21 @@
         "icon": "$(plug)"
       },
       {
+        "command": "wdatabase.openQueryPlayground",
+        "title": "WDatabase: Open Query & NoSQL Playground",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "wdatabase.generateMigration",
+        "title": "WDatabase: Generate Schema Migration Script",
+        "icon": "$(diff)"
+      },
+      {
+        "command": "wdatabase.generateTestSuite",
+        "title": "WDatabase: Generate Pytest Integration Suite",
+        "icon": "$(beaker)"
+      },
+      {
         "command": "wdatabase.testConnection",
         "title": "WDatabase: Test Database Connectivity",
         "icon": "$(check)"
