@@ -100,7 +100,13 @@ export class WDatabaseTreeProvider implements vscode.TreeDataProvider<TreeItemNo
             const models = this.workspaceIndex.getModelsByEngine(engine);
 
             return models.map((model) => {
-                const badge = model.isForensic ? ' [ForensicModel | status=99]' : '';
+                let badge = '';
+                if (model.isForensic) {
+                    badge = ' [ForensicAudit | status=99]';
+                } else if (['wmongo', 'wtinydb', 'wElasticsearch'].includes(engine)) {
+                    badge = ` [${engine === 'wmongo' ? 'Collection' : engine === 'wElasticsearch' ? 'Index' : 'JSON Document'}]`;
+                }
+
                 const item = new TreeItemNode(
                     `📄 ${model.className}${badge}`,
                     vscode.TreeItemCollapsibleState.None,
