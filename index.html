@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WDatabase Tools v1.0.0 | VS Code Extension for Python Database Libraries</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="WDatabase Tools v1.0.0: Intelligent VS Code extension for wpostgresql, wredis, wsqlite, wtinydb, wmongo and the w database ecosystem. Zero-noise Pydantic DB binding, ERD visualizer, and Forensic audit badges.">
+    <meta name="keywords" content="vscode, extension, wpostgresql, wredis, wsqlite, wtinydb, wmongo, pydantic, forensic, soft delete, python, wisrovi">
+    <meta name="author" content="William Steve Rodriguez Villamizar (wisrovi)">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="WDatabase Tools - VS Code Extension">
+    <meta property="og:description" content="Visual control suite & intelligent scanner for w database libraries in VS Code.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://github.com/wisrovi/wdatabase-vscode">
+    <meta property="og:site_name" content="WDatabase Tools">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #00f2fe;
+            --primary-glow: rgba(0, 242, 254, 0.4);
+            --secondary: #4facfe;
+            --secondary-glow: rgba(79, 172, 254, 0.4);
+            --accent: #10b981;
+            --bg-deep: #020617;
+            --bg-card: rgba(15, 23, 42, 0.7);
+            --bg-card-hover: rgba(30, 41, 59, 0.9);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(0, 242, 254, 0.3);
+            --gradient-linear: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-deep); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+
+        header { padding: 1.5rem 3rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; }
+        .logo { display: flex; align-items: center; gap: 0.75rem; font-weight: 800; font-size: 1.25rem; text-decoration: none; color: var(--text-main); }
+        .logo-icon { width: 36px; height: 36px; background: var(--gradient-linear); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: black; font-weight: 900; }
+
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
+        .btn-primary { background: var(--gradient-linear); color: black; box-shadow: 0 0 20px var(--primary-glow); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 30px var(--primary-glow); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: var(--text-main); }
+        .btn-secondary:hover { border-color: var(--primary); transform: translateY(-2px); }
+
+        .hero { padding: 6rem 3rem 4rem; text-align: center; max-width: 1200px; margin: 0 auto; }
+        .badge-pill { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; background: rgba(0, 242, 254, 0.1); border: 1px solid var(--border-highlight); border-radius: 9999px; color: var(--primary); font-size: 0.875rem; font-weight: 600; margin-bottom: 1.5rem; }
+        .hero h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem; background: linear-gradient(180deg, #ffffff 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.25rem; color: var(--text-dim); max-width: 800px; margin: 0 auto 2.5rem; }
+
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; max-width: 1200px; margin: 4rem auto; padding: 0 3rem; }
+        .feature-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; transition: all 0.3s; }
+        .feature-card:hover { border-color: var(--primary); transform: translateY(-4px); background: var(--bg-card-hover); }
+        .feature-icon { width: 48px; height: 48px; background: rgba(0, 242, 254, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 1.5rem; margin-bottom: 1.25rem; }
+        .feature-card h3 { font-size: 1.25rem; margin-bottom: 0.75rem; font-weight: 700; }
+        .feature-card p { color: var(--text-dim); font-size: 0.9375rem; }
+
+        .code-section { max-width: 1000px; margin: 4rem auto; padding: 0 3rem; }
+        .code-container { background: #0b1120; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); }
+        .code-header { background: #0f172a; padding: 1rem 1.5rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid var(--border); }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #f59e0b; }
+        .dot-green { background: #10b981; }
+        .code-body { padding: 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #38bdf8; overflow-x: auto; }
+
+        footer { border-top: 1px solid var(--border); padding: 3rem; text-align: center; color: var(--text-muted); font-size: 0.875rem; margin-top: 6rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#" class="logo">
+            <div class="logo-icon">W</div>
+            <span>WDatabase Tools</span>
+        </a>
+        <div>
+            <a href="https://github.com/wisrovi/wdatabase-vscode" class="btn btn-secondary"><i class="fab fa-github"></i> GitHub</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="badge-pill"><i class="fas fa-sparkles"></i> VS Code Extension v1.0.0</div>
+        <h1>Intelligent Database Control Suite for VS Code</h1>
+        <p>Zero-noise Pydantic DB scanner, automatic model-to-engine attribution (PostgreSQL, SQLite, Redis, TinyDB, Mongo), interactive ERD diagrams, and Forensic audit inspection.</p>
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <a href="#features" class="btn btn-primary"><i class="fas fa-rocket"></i> Explore Features</a>
+            <a href="#install" class="btn btn-secondary"><i class="fas fa-download"></i> Installation Guide</a>
+        </div>
+    </section>
+
+    <section id="features" class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-filter"></i></div>
+            <h3>Zero-Noise Pydantic Filter</h3>
+            <p>Automatically separates database-bound models from plain FastAPI schemas or settings, hiding un-bound Pydantics to eliminate visual clutter.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-cubes"></i></div>
+            <h3>Multi-Engine Attribution</h3>
+            <p>Categorizes every model by its exact database target (wpostgresql, wsqlite, wredis, wtinydb, wmongo, etc.) with badges for multi-DB backups.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-user-shield"></i></div>
+            <h3>Forensic Audit Inspector</h3>
+            <p>Highlights ForensicModel classes with status=99 soft delete indicators and UTC audit timestamps (create_by, update_in, delete_by).</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-project-diagram"></i></div>
+            <h3>Interactive ERD Visualizer</h3>
+            <p>Generates dynamic SVG/Mermaid Entity-Relationship Diagrams directly from workspace models in one click.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+            <h3>CodeLens & Hover Tooltips</h3>
+            <p>Inline CodeLens action buttons above database models and rich hover cards displaying SQL types, primary keys, and constraints.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-wand-magic-sparkles"></i></div>
+            <h3>Model & Connection Wizards</h3>
+            <p>Interactive step-by-step QuickPick wizards to generate Pydantic DB models and safe connection configurations with env variables.</p>
+        </div>
+    </section>
+
+    <section id="install" class="code-section">
+        <h2 style="text-align: center; font-size: 2rem; margin-bottom: 1.5rem;">Quick Installation</h2>
+        <div class="code-container">
+            <div class="code-header">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+                <span style="color: var(--text-dim); font-size: 0.8rem; margin-left: 0.5rem;">bash</span>
+            </div>
+            <div class="code-body">
+                <pre># Clone and build wdatabase-vscode
+git clone https://github.com/wisrovi/wdatabase-vscode.git
+cd wdatabase-vscode
+npm install && npm run compile
+
+# Install extension into VS Code
+code --install-extension wdatabase-vscode-1.0.0.vsix</pre>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 WDatabase Tools. Created by William Steve Rodriguez Villamizar (wisrovi). Released under MIT License.</p>
+    </footer>
+</body>
+</html>
