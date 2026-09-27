@@ -51,25 +51,48 @@ export class ERDPanel {
     <title>WDatabase ERD Visualizer</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <style>
-        body { font-family: system-ui, sans-serif; background: #0f172a; color: #f8fafc; padding: 2rem; }
-        h1 { color: #00f2fe; margin-bottom: 0.5rem; }
+        body { font-family: system-ui, sans-serif; background: #0b0f19; color: #f8fafc; padding: 2rem; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        h1 { color: #00f2fe; margin: 0; }
         .badge { background: #1e293b; padding: 0.25rem 0.75rem; border-radius: 9999px; border: 1px solid #334155; }
-        .mermaid { background: #1e293b; padding: 2rem; border-radius: 12px; margin-top: 1.5rem; }
+        .actions { display: flex; gap: 10px; }
+        button { background: #0284c7; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0369a1; }
+        .mermaid { background: #1e293b; padding: 2rem; border-radius: 12px; margin-top: 1rem; border: 1px solid #334155; }
     </style>
 </head>
 <body>
-    <h1>🗄️ WDatabase Entity-Relationship Diagram (ERD)</h1>
-    <p>Visualizing <span class="badge">${models.length} Bound DB Models</span> across workspace engines.</p>
-    <div class="mermaid">
+    <div class="header">
+        <div>
+            <h1>🗄️ WDatabase Entity-Relationship Diagram (ERD)</h1>
+            <p style="margin-top: 5px; color: #94a3b8;">Visualizing <span class="badge">${models.length} Bound DB Models</span> across workspace engines.</p>
+        </div>
+        <div class="actions">
+            <button onclick="copyMermaid()">📋 Copy Mermaid Code</button>
+            <button onclick="window.print()">🖨️ Export PDF / Print</button>
+        </div>
+    </div>
+
+    <div class="mermaid" id="mermaidDiagram">
 classDiagram
 ${mermaidNodes}
     </div>
-    <script>mermaid.initialize({ startOnLoad: true, theme: 'dark' });</script>
+
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+
+        function copyMermaid() {
+            const rawCode = \`classDiagram\\n${mermaidNodes.replace(/\\/g, '\\\\')}\`;
+            navigator.clipboard.writeText(rawCode).then(() => {
+                alert('✅ Mermaid ERD code copied to clipboard! Paste it into README.md or MkDocs.');
+            });
+        }
+    </script>
 </body>
 </html>`;
     }
 
-    private dispose(): void {
+    public dispose(): void {
         ERDPanel.currentPanel = undefined;
         this.panel.dispose();
     }

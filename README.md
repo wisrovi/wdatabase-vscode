@@ -1,28 +1,24 @@
-# WDatabase Tools for Visual Studio Code (`wdatabase-vscode`)
-
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=wisrovi.wdatabase-vscode">
-    <img src="https://img.shields.io/badge/VS_Code-WDatabase_Tools-blue?logo=visualstudiocode" alt="VS Code Extension">
-  </a>
-  <a href="LICENSE">
-    <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
-  </a>
-  <a href="https://github.com/wisrovi/wdatabase-vscode">
-    <img src="https://img.shields.io/badge/Version-1.0.0-purple" alt="Version">
-  </a>
+  <a href="https://open-vsx.org/extension/wisrovi/wdatabase-vscode"><img src="https://img.shields.io/badge/Open%20VSX-v1.2.0-blue?style=for-the-badge&logo=visualstudiocode" alt="Open VSX" /></a>
+  <a href="https://linkedin.com/in/wisrovi-rodriguez"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
+  <a href="https://wisrovi.dev"><img src="https://img.shields.io/badge/Author-wisrovi.dev-111827?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Portal" /></a>
+  <a href="https://orcid.org/0009-0005-0710-1861"><img src="https://img.shields.io/badge/ORCID-0009--0005--0710--1861-A6CE39?style=for-the-badge&logo=orcid&logoColor=white" alt="ORCID" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" alt="License" /></a>
 </p>
 
-**WDatabase Tools** is the intelligent control suite & visual IDE extension for the `w` database library ecosystem. It automatically scans your Python workspace, filters out non-database Pydantic models (such as FastAPI request/response DTOs), categorizes bound models by database engine, and provides interactive ERD diagrams, CodeLens actions, and visual data inspectors.
+# 🗄️ WDatabase Tools for VS Code & Antigravity IDE (`wdatabase-vscode`)
 
-## Features
+**WDatabase Tools** is the intelligent control suite & visual IDE extension for the `w` database library ecosystem (`wpostgresql`, `wredis`, `wsqlite`, `wclickhouse`, `wmongo`, `wtinydb`, `wmysql`, `wmariadb`, `wElasticsearch`, `wdatabricks`, `wSnowflake`, and `wauth`).
 
-- **Zero-Noise DB-Binding Engine**: Automatically distinguishes Pydantic models used in database repositories from plain API schemas or settings, excluding non-DB schemas from view.
-- **Multi-Engine Categorization**: Classifies models by target database engine (`wpostgresql`, `wsqlite`, `wredis`, `wtinydb`, `wmongo`, etc.).
-- **Forensic Audit Inspection**: Displays soft-delete badges (`status=99`) and UTC audit fields (`create_by`, `create_in`, `update_by`, `update_in`, `delete_by`, `delete_in`) on models inheriting from `ForensicModel`.
-- **Interactive ERD Diagram Visualizer**: Generates dynamic Entity-Relationship Diagrams in SVG/Mermaid format directly from your Python models.
-- **CodeLens & Rich Hover Tooltips**: Hover over Pydantic models to inspect SQL/NoSQL table schemas, constraints, types, and active repository bindings.
-- **Real-Time Anti-Pattern Diagnostics**: Detects common mistakes (e.g. passing dict to `db.update()`, missing Primary Keys) with one-click Quick Fixes.
-- **Model & Connection Wizards**: Step-by-step QuickPick wizards for generating `BaseModel` or `ForensicModel` classes and connection dictionaries.
+## 🌟 Key Features (v1.2.0)
+
+- **Zero-Noise DB-Binding Engine**: Automatically distinguishes Pydantic models bound to database repositories from plain API schemas or settings.
+- **WPipe Pipeline Integration**: Instantly generate class-based `@step` ingestion and audit components from any Pydantic database model via CodeLens.
+- **Synthetic Seed & Mock Data Generator**: Generates realistic synthetic mock data scripts to populate development databases in seconds.
+- **WAuth Vault Integration**: Detects hardcoded plaintext passwords and suggests securing them with AES-256 Fernet salted machine storage.
+- **Advanced OLAP & Concurrency Diagnostics**: Warns against single-row insertion loops in ClickHouse (recommending `insert_many` or `insert_arrow`), flags blocking `keys('*')` in Redis clusters, and recommends WAL mode for multithreaded SQLite.
+- **Interactive ERD Diagram Visualizer**: Generates dynamic Mermaid Entity-Relationship Diagrams with one-click clipboard copying and export.
+- **Multi-Engine Query & OLAP Playground**: Execute test queries, inspect latency metrics, view soft-deleted records (`status=99`), and export data to JSON/CSV.
 
 ## Supported Database Libraries
 

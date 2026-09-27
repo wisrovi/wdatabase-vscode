@@ -2,7 +2,7 @@
   "name": "wdatabase-vscode",
   "displayName": "WDatabase Tools",
   "description": "Intelligent control suite & visual tools for the wisrovi database ecosystem (wpostgresql, wredis, wsqlite, wclickhouse, wmongo, wtinydb, wmysql, wmariadb, wElasticsearch, wdatabricks, wSnowflake)",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "publisher": "wisrovi",
   "author": {
     "name": "William Rodriguez (wisrovi)",
@@ -87,6 +87,16 @@
         "command": "wdatabase.generateTestSuite",
         "title": "WDatabase: Generate Pytest Integration Suite",
         "icon": "$(beaker)"
+      },
+      {
+        "command": "wdatabase.generateWPipeStep",
+        "title": "WDatabase: Generate WPipe Pipeline Step (@step)",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "wdatabase.generateMockData",
+        "title": "WDatabase: Generate Synthetic Mock / Seed Data Script",
+        "icon": "$(sparkle)"
       },
       {
         "command": "wdatabase.testConnection",

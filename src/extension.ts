@@ -17,6 +17,8 @@ import { WDatabaseCompletionItemProvider } from './providers/completionProvider'
 import { QueryPlaygroundPanel } from './webviews/queryPlayground';
 import { generateMigrationCommand } from './commands/generateMigrations';
 import { generateTestSuiteCommand } from './commands/generateTests';
+import { generateWPipeStepCommand } from './commands/generateWPipeStep';
+import { generateMockDataCommand } from './commands/generateMockData';
 
 export function activate(context: vscode.ExtensionContext): void {
     const workspaceIndex = new WorkspaceIndex();
@@ -119,6 +121,18 @@ export function activate(context: vscode.ExtensionContext): void {
     context.subscriptions.push(
         vscode.commands.registerCommand('wdatabase.generateTestSuite', (modelName) => {
             generateTestSuiteCommand(typeof modelName === 'string' ? modelName : undefined);
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.generateWPipeStep', (modelName) => {
+            generateWPipeStepCommand(typeof modelName === 'string' ? modelName : undefined);
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.generateMockData', (modelName) => {
+            generateMockDataCommand(typeof modelName === 'string' ? modelName : undefined);
         })
     );
 

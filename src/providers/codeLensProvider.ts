@@ -37,7 +37,26 @@ export class WDatabaseCodeLensProvider implements vscode.CodeLensProvider {
                     })
                 );
             }
-            // 3. Migration Action
+
+            // 3. WPipe Step Generator Action
+            codeLenses.push(
+                new vscode.CodeLens(range, {
+                    title: `$(rocket) [Generate WPipe Step]`,
+                    command: 'wdatabase.generateWPipeStep',
+                    arguments: [model.className],
+                })
+            );
+
+            // 4. Mock Data Generator Action
+            codeLenses.push(
+                new vscode.CodeLens(range, {
+                    title: `$(sparkle) [Generate Seed Data]`,
+                    command: 'wdatabase.generateMockData',
+                    arguments: [model.className],
+                })
+            );
+
+            // 5. Migration Action
             codeLenses.push(
                 new vscode.CodeLens(range, {
                     title: `$(diff) [Generate Migration]`,
@@ -46,7 +65,7 @@ export class WDatabaseCodeLensProvider implements vscode.CodeLensProvider {
                 })
             );
 
-            // 4. Test Suite Action
+            // 6. Test Suite Action
             codeLenses.push(
                 new vscode.CodeLens(range, {
                     title: `$(beaker) [Generate Pytest Suite]`,
@@ -55,7 +74,7 @@ export class WDatabaseCodeLensProvider implements vscode.CodeLensProvider {
                 })
             );
 
-            // 5. Query Playground Action
+            // 7. Query Playground Action
             codeLenses.push(
                 new vscode.CodeLens(range, {
                     title: `$(terminal) [Query Playground]`,
