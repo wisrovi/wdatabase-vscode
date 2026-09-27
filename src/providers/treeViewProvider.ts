@@ -126,11 +126,15 @@ export class WDatabaseTreeProvider implements vscode.TreeDataProvider<TreeItemNo
         }
 
         if (element.contextValue === 'db_connections') {
-            return [
-                new TreeItemNode('Localhost PostgreSQL:5432 🟢', vscode.TreeItemCollapsibleState.None, 'connection'),
-                new TreeItemNode('Localhost Redis:6379 🟢', vscode.TreeItemCollapsibleState.None, 'connection'),
-                new TreeItemNode('Embedded SQLite (app.db) 🟢', vscode.TreeItemCollapsibleState.None, 'connection'),
-            ];
+            const pgNode = new TreeItemNode('Localhost PostgreSQL:5432 🟢', vscode.TreeItemCollapsibleState.None, 'connection');
+            const redisNode = new TreeItemNode('Localhost Redis:6379 🟢 [Inspector]', vscode.TreeItemCollapsibleState.None, 'connection');
+            redisNode.command = {
+                command: 'wdatabase.openRedisInspector',
+                title: 'Open Redis Inspector'
+            };
+            const sqliteNode = new TreeItemNode('Embedded SQLite (app.db) 🟢', vscode.TreeItemCollapsibleState.None, 'connection');
+
+            return [pgNode, redisNode, sqliteNode];
         }
 
         if (element.contextValue === 'snippets_catalog') {

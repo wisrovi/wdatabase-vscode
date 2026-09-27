@@ -25,6 +25,7 @@ import { reverseEngineerDBCommand } from './commands/reverseEngineerDB';
 import { manageContainerCommand } from './commands/manageContainer';
 import { runModelTestsCommand } from './commands/runModelTests';
 import { detectSchemaDriftCommand } from './commands/schemaDrift';
+import { RedisInspectorPanel } from './webviews/redisInspector';
 
 export function activate(context: vscode.ExtensionContext): void {
     const workspaceIndex = new WorkspaceIndex();
@@ -108,6 +109,12 @@ export function activate(context: vscode.ExtensionContext): void {
     context.subscriptions.push(
         vscode.commands.registerCommand('wdatabase.openQueryPlayground', (model) => {
             QueryPlaygroundPanel.createOrShow(workspaceIndex, model);
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.openRedisInspector', () => {
+            RedisInspectorPanel.createOrShow();
         })
     );
 

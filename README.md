@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://open-vsx.org/extension/wisrovi/wdatabase-vscode"><img src="https://img.shields.io/badge/Open%20VSX-v1.4.0-blue?style=for-the-badge&logo=visualstudiocode" alt="Open VSX" /></a>
+  <a href="https://open-vsx.org/extension/wisrovi/wdatabase-vscode"><img src="https://img.shields.io/badge/Open%20VSX-v1.5.0-blue?style=for-the-badge&logo=visualstudiocode" alt="Open VSX" /></a>
   <a href="https://linkedin.com/in/wisrovi-rodriguez"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
   <a href="https://wisrovi.dev"><img src="https://img.shields.io/badge/Author-wisrovi.dev-111827?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Portal" /></a>
   <a href="https://orcid.org/0009-0005-0710-1861"><img src="https://img.shields.io/badge/ORCID-0009--0005--0710--1861-A6CE39?style=for-the-badge&logo=orcid&logoColor=white" alt="ORCID" /></a>
@@ -10,8 +10,12 @@
 
 **WDatabase Tools** is the intelligent control suite & visual IDE extension for the `w` database library ecosystem (`wpostgresql`, `wredis`, `wsqlite`, `wclickhouse`, `wmongo`, `wtinydb`, `wmysql`, `wmariadb`, `wElasticsearch`, `wdatabricks`, `wSnowflake`, and `wauth`).
 
-## 🌟 Key Features (v1.4.0)
+## 🌟 Key Features (v1.5.0 Enterprise / S-Tier)
 
+- **📊 Visual Data Grid con Edición Inline & CRUD In-Situ**: Haz doble clic en cualquier celda para modificar valores numéricos o texto y confirmar cambios atómicos directamente contra la base de datos.
+- **🔴 WRedis Commander & Live TTL Monitor**: Explorador visual dedicado para Redis con inspección de tipos (string, hash, list, set, zset), editor y profilado de memoria (`memoryBytes`), y gestión interactiva de TTL.
+- **📈 Analytical Metric & Time-Series Visualizer**: Gráficos analíticos embebidos para consultas de ClickHouse y series de tiempo con histogramas de latencia y distribuciones porcentuales.
+- **🕒 Historial de Consultas & Safe Audit Log**: Registro persistente de las últimas 50 consultas con tiempos de respuesta en milisegundos, conteo de filas y recarga instantánea en el editor con 1 clic.
 - **🤖 AI Text-to-Query Assistant**: Translate natural language prompts directly into optimized SQL (PostgreSQL, SQLite, ClickHouse, MySQL) or NoSQL (MongoDB, Redis) within the Query Playground.
 - **🔍 Live Schema Drift Detector & Healer**: Introspect live database tables against in-memory Pydantic models, detect missing columns or type mismatches, and generate 1-click self-healing DDL migrations.
 - **⚡ Query Profiling & EXPLAIN Plan Visualizer**: Inspect execution plans and receive intelligent index recommendations directly from the playground.
