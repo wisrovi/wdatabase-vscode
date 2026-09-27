@@ -83,12 +83,21 @@ export class WDatabaseCodeLensProvider implements vscode.CodeLensProvider {
                 })
             );
 
-            // 7. Query Playground Action
+            // 8. Query Playground Action
             codeLenses.push(
                 new vscode.CodeLens(range, {
                     title: `$(terminal) [Query Playground]`,
                     command: 'wdatabase.openQueryPlayground',
                     arguments: [model],
+                })
+            );
+
+            // 9. Schema Drift Detector Action
+            codeLenses.push(
+                new vscode.CodeLens(range, {
+                    title: `$(search-fuzzy) [Detect Schema Drift]`,
+                    command: 'wdatabase.detectSchemaDrift',
+                    arguments: [model.className],
                 })
             );
         }

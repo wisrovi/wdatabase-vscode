@@ -2,7 +2,7 @@
   "name": "wdatabase-vscode",
   "displayName": "WDatabase Tools",
   "description": "Intelligent control suite & visual tools for the wisrovi database ecosystem (wpostgresql, wredis, wsqlite, wclickhouse, wmongo, wtinydb, wmysql, wmariadb, wElasticsearch, wdatabricks, wSnowflake)",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "publisher": "wisrovi",
   "author": {
     "name": "William Rodriguez (wisrovi)",
@@ -122,6 +122,11 @@
         "command": "wdatabase.addVaultSecret",
         "title": "WDatabase: Add New Secret to WAuth Vault",
         "icon": "$(lock)"
+      },
+      {
+        "command": "wdatabase.detectSchemaDrift",
+        "title": "WDatabase: Detect Live Schema Drift vs Pydantic Model",
+        "icon": "$(search-fuzzy)"
       }
     ],
     "viewsContainers": {

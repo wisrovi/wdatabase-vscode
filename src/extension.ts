@@ -24,6 +24,7 @@ import { generateMockDataCommand } from './commands/generateMockData';
 import { reverseEngineerDBCommand } from './commands/reverseEngineerDB';
 import { manageContainerCommand } from './commands/manageContainer';
 import { runModelTestsCommand } from './commands/runModelTests';
+import { detectSchemaDriftCommand } from './commands/schemaDrift';
 
 export function activate(context: vscode.ExtensionContext): void {
     const workspaceIndex = new WorkspaceIndex();
@@ -151,6 +152,12 @@ export function activate(context: vscode.ExtensionContext): void {
     context.subscriptions.push(
         vscode.commands.registerCommand('wdatabase.runModelTests', (modelName) => {
             runModelTestsCommand(typeof modelName === 'string' ? modelName : undefined);
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.detectSchemaDrift', (modelName) => {
+            detectSchemaDriftCommand(workspaceIndex, typeof modelName === 'string' ? modelName : undefined);
         })
     );
 
