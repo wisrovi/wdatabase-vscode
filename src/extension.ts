@@ -29,6 +29,8 @@ import { RedisInspectorPanel } from './webviews/redisInspector';
 import { ForensicDiffPanel } from './webviews/forensicDiff';
 import { exportDataDictionaryCommand } from './commands/dataDictionary';
 import { launchCrossEngineMigrationWizard } from './wizards/crossEngineWizard';
+import { openQueryScratchpadCommand, runScratchpadBlockCommand, WDatabaseScratchpadCodeLensProvider } from './features/scratchpad';
+import { checkGitMigrationDriftCommand } from './features/gitTracker';
 
 export function activate(context: vscode.ExtensionContext): void {
     const workspaceIndex = new WorkspaceIndex();
@@ -220,6 +222,30 @@ export function activate(context: vscode.ExtensionContext): void {
         vscode.commands.registerCommand('wdatabase.crossEngineMigration', () => {
             launchCrossEngineMigrationWizard();
         })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.openScratchpad', openQueryScratchpadCommand)
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.runScratchpadBlock', (query: string, engine: string) => {
+            runScratchpadBlockCommand(query, engine);
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.checkGitMigrationDrift', () => {
+            checkGitMigrationDriftCommand(workspaceIndex);
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerCodeLensProvider({ language: 'sql', scheme: 'untitled' }, new WDatabaseScratchpadCodeLensProvider())
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerCodeLensProvider({ pattern: '**/*.wsql' }, new WDatabaseScratchpadCodeLensProvider())
     );
 }
 

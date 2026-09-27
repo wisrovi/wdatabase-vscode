@@ -2,7 +2,7 @@
   "name": "wdatabase-vscode",
   "displayName": "WDatabase Tools",
   "description": "Intelligent control suite & visual tools for the wisrovi database ecosystem (wpostgresql, wredis, wsqlite, wclickhouse, wmongo, wtinydb, wmysql, wmariadb, wElasticsearch, wdatabricks, wSnowflake)",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "publisher": "wisrovi",
   "author": {
     "name": "William Rodriguez (wisrovi)",
@@ -147,6 +147,16 @@
         "command": "wdatabase.crossEngineMigration",
         "title": "WDatabase: Launch Cross-Engine Data Migration Pipeline Wizard",
         "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "wdatabase.openScratchpad",
+        "title": "WDatabase: Open Interactive Query Scratchpad (.wsql)",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "wdatabase.checkGitMigrationDrift",
+        "title": "WDatabase: Check Git Schema Drift vs Migration Staging",
+        "icon": "$(git-commit)"
       }
     ],
     "viewsContainers": {

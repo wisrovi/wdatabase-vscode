@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://open-vsx.org/extension/wisrovi/wdatabase-vscode"><img src="https://img.shields.io/badge/Open%20VSX-v1.6.0-blue?style=for-the-badge&logo=visualstudiocode" alt="Open VSX" /></a>
+  <a href="https://open-vsx.org/extension/wisrovi/wdatabase-vscode"><img src="https://img.shields.io/badge/Open%20VSX-v2.0.0-blue?style=for-the-badge&logo=visualstudiocode" alt="Open VSX" /></a>
   <a href="https://linkedin.com/in/wisrovi-rodriguez"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
   <a href="https://wisrovi.dev"><img src="https://img.shields.io/badge/Author-wisrovi.dev-111827?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Portal" /></a>
   <a href="https://orcid.org/0009-0005-0710-1861"><img src="https://img.shields.io/badge/ORCID-0009--0005--0710--1861-A6CE39?style=for-the-badge&logo=orcid&logoColor=white" alt="ORCID" /></a>
@@ -8,10 +8,16 @@
 
 # 🗄️ WDatabase Tools for VS Code & Antigravity IDE (`wdatabase-vscode`)
 
-**WDatabase Tools** is the intelligent control suite & visual IDE extension for the `w` database library ecosystem (`wpostgresql`, `wredis`, `wsqlite`, `wclickhouse`, `wmongo`, `wtinydb`, `wmysql`, `wmariadb`, `wElasticsearch`, `wdatabricks`, `wSnowflake`, and `wauth`).
+<p align="center">
+  <img src="icon.png" width="128" height="128" alt="WDatabase Tools Logo" />
+</p>
 
-## 🌟 Key Features (v1.6.0 Architecture & Forensic Suite)
+**WDatabase Tools** is the flagship intelligent database control suite & visual IDE extension for the `w` database library ecosystem (`wpostgresql`, `wredis`, `wsqlite`, `wclickhouse`, `wmongo`, `wtinydb`, `wmysql`, `wmariadb`, `wElasticsearch`, `wdatabricks`, `wSnowflake`, and `wauth`).
 
+## 🌟 Key Features (v2.0.0 Ultimate Edition)
+
+- **⚡ Interactive Query Scratchpad (`.wsql` / Multi-Cursor Runners)**: Archivo interactivo temporal tipo REST Client/Quokka para escribir bloques de consultas con directivas `-- @conn <engine>` y ejecutarlas bloque por bloque con CodeLens directo (`[▶ Run on wpostgresql]`).
+- **🔍 Git Branch Schema Drift & Migration Tracker**: Verifica el staging de git antes de confirmar cambios y avisa proactivamente si has modificado modelos Pydantic pero olvidaste generar el archivo de migración DDL correspondiente.
 - **🛡️ Time-Machine Forensic Diff & Restore (`status=99`)**: Visor visual interactivo lado a lado para auditar registros con borrado lógico (`ForensicModel`), comparar versiones (`forensic_version`), rastrear quién ejecutó el borrado y restaurar el registro al estado activo (`status=1`) con 1 clic.
 - **⚡ Live Query Linting & Anti-Pattern Diagnostics**: Analizador sintáctico en tiempo real en archivos Python: detecta riesgos de **SQL Injection** en f-strings, alertas de **`SELECT *` sin LIMIT** en tablas masivas y detección de antipatrón **N+1 queries** en bucles `for`.
 - **📑 Automated Data Dictionary Generator**: Comando `wdatabase.exportDataDictionary` para generar documentación técnica completa `DATABASE_SCHEMA.md` con especificaciones de columnas, tipos, restricciones y DDLs.
