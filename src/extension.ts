@@ -26,6 +26,9 @@ import { manageContainerCommand } from './commands/manageContainer';
 import { runModelTestsCommand } from './commands/runModelTests';
 import { detectSchemaDriftCommand } from './commands/schemaDrift';
 import { RedisInspectorPanel } from './webviews/redisInspector';
+import { ForensicDiffPanel } from './webviews/forensicDiff';
+import { exportDataDictionaryCommand } from './commands/dataDictionary';
+import { launchCrossEngineMigrationWizard } from './wizards/crossEngineWizard';
 
 export function activate(context: vscode.ExtensionContext): void {
     const workspaceIndex = new WorkspaceIndex();
@@ -198,6 +201,24 @@ export function activate(context: vscode.ExtensionContext): void {
             if (!secret) return;
             vscode.window.showInformationMessage(`🔒 Secret '${key}' safely encrypted and stored in WAuth vault.`);
             vaultProvider.refresh();
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.openForensicDiff', (model) => {
+            ForensicDiffPanel.createOrShow(workspaceIndex, model);
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.exportDataDictionary', () => {
+            exportDataDictionaryCommand(workspaceIndex);
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.crossEngineMigration', () => {
+            launchCrossEngineMigrationWizard();
         })
     );
 }

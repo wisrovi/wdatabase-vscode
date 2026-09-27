@@ -106,6 +106,45 @@ export class WDatabaseDiagnostics {
                 diagnostic.code = 'INFO_SQLITE_WAL';
                 diagnostics.push(diagnostic);
             }
+
+            // 7. Security: SQL Injection via f-strings
+            if (line.match(/f["'].*SELECT\s+.*WHERE\s+.*\{/i) || line.match(/f["'].*UPDATE\s+.*SET\s+.*\{/i) || line.match(/f["'].*DELETE\s+.*WHERE\s+.*\{/i)) {
+                const range = new vscode.Range(i, 0, i, line.length);
+                const diagnostic = new vscode.Diagnostic(
+                    range,
+                    'WDatabase Security Alert (SQL Injection Risk): Direct f-string interpolation in raw query string. Use parameterized queries ($1, %s, or ?) to prevent injection attacks.',
+                    vscode.DiagnosticSeverity.Error
+                );
+                diagnostic.code = 'ERR_SQL_INJECTION_RISK';
+                diagnostics.push(diagnostic);
+            }
+
+            // 8. Performance: SELECT * without LIMIT on large engine tables
+            if (line.match(/SELECT\s+\*\s+FROM/i) && !line.toUpperCase().includes('LIMIT') && (line.includes('execute(') || line.includes('query('))) {
+                const range = new vscode.Range(i, 0, i, line.length);
+                const diagnostic = new vscode.Diagnostic(
+                    range,
+                    'WDatabase Performance Warning: Unbounded "SELECT *" query detected without a LIMIT clause. On high-volume tables (ClickHouse / PostgreSQL), this risks OOM and massive latency.',
+                    vscode.DiagnosticSeverity.Warning
+                );
+                diagnostic.code = 'WARN_UNBOUNDED_SELECT_STAR';
+                diagnostics.push(diagnostic);
+            }
+
+            // 9. N+1 Query Antipattern in loops
+            if (i > 0 && (line.includes('.get(') || line.includes('.find_by_id(') || line.includes('.query('))) {
+                const prev = lines[i - 1].trim();
+                if (prev.startsWith('for ') && prev.includes(' in ')) {
+                    const range = new vscode.Range(i - 1, 0, i, line.length);
+                    const diagnostic = new vscode.Diagnostic(
+                        range,
+                        'WDatabase Architectural Anti-Pattern (N+1 Queries): Database read query invoked inside a loop. Batch fetch using WHERE id IN (...) or db.get_many() instead.',
+                        vscode.DiagnosticSeverity.Warning
+                    );
+                    diagnostic.code = 'WARN_N_PLUS_ONE_QUERY';
+                    diagnostics.push(diagnostic);
+                }
+            }
         }
 
         this.diagnosticCollection.set(document.uri, diagnostics);

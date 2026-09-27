@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://open-vsx.org/extension/wisrovi/wdatabase-vscode"><img src="https://img.shields.io/badge/Open%20VSX-v1.5.0-blue?style=for-the-badge&logo=visualstudiocode" alt="Open VSX" /></a>
+  <a href="https://open-vsx.org/extension/wisrovi/wdatabase-vscode"><img src="https://img.shields.io/badge/Open%20VSX-v1.6.0-blue?style=for-the-badge&logo=visualstudiocode" alt="Open VSX" /></a>
   <a href="https://linkedin.com/in/wisrovi-rodriguez"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
   <a href="https://wisrovi.dev"><img src="https://img.shields.io/badge/Author-wisrovi.dev-111827?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Portal" /></a>
   <a href="https://orcid.org/0009-0005-0710-1861"><img src="https://img.shields.io/badge/ORCID-0009--0005--0710--1861-A6CE39?style=for-the-badge&logo=orcid&logoColor=white" alt="ORCID" /></a>
@@ -10,8 +10,12 @@
 
 **WDatabase Tools** is the intelligent control suite & visual IDE extension for the `w` database library ecosystem (`wpostgresql`, `wredis`, `wsqlite`, `wclickhouse`, `wmongo`, `wtinydb`, `wmysql`, `wmariadb`, `wElasticsearch`, `wdatabricks`, `wSnowflake`, and `wauth`).
 
-## 🌟 Key Features (v1.5.0 Enterprise / S-Tier)
+## 🌟 Key Features (v1.6.0 Architecture & Forensic Suite)
 
+- **🛡️ Time-Machine Forensic Diff & Restore (`status=99`)**: Visor visual interactivo lado a lado para auditar registros con borrado lógico (`ForensicModel`), comparar versiones (`forensic_version`), rastrear quién ejecutó el borrado y restaurar el registro al estado activo (`status=1`) con 1 clic.
+- **⚡ Live Query Linting & Anti-Pattern Diagnostics**: Analizador sintáctico en tiempo real en archivos Python: detecta riesgos de **SQL Injection** en f-strings, alertas de **`SELECT *` sin LIMIT** en tablas masivas y detección de antipatrón **N+1 queries** en bucles `for`.
+- **📑 Automated Data Dictionary Generator**: Comando `wdatabase.exportDataDictionary` para generar documentación técnica completa `DATABASE_SCHEMA.md` con especificaciones de columnas, tipos, restricciones y DDLs.
+- **🔀 Cross-Engine Data Migration Pipeline Wizard**: Asistente interactivo para generar pipelines de sincronización y migración por lotes basados en `wpipe` entre cualquier par de motores (ej. `wsqlite` ➔ `wpostgresql` o `wpostgresql` ➔ `wclickhouse`).
 - **📊 Visual Data Grid con Edición Inline & CRUD In-Situ**: Haz doble clic en cualquier celda para modificar valores numéricos o texto y confirmar cambios atómicos directamente contra la base de datos.
 - **🔴 WRedis Commander & Live TTL Monitor**: Explorador visual dedicado para Redis con inspección de tipos (string, hash, list, set, zset), editor y profilado de memoria (`memoryBytes`), y gestión interactiva de TTL.
 - **📈 Analytical Metric & Time-Series Visualizer**: Gráficos analíticos embebidos para consultas de ClickHouse y series de tiempo con histogramas de latencia y distribuciones porcentuales.

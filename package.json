@@ -2,7 +2,7 @@
   "name": "wdatabase-vscode",
   "displayName": "WDatabase Tools",
   "description": "Intelligent control suite & visual tools for the wisrovi database ecosystem (wpostgresql, wredis, wsqlite, wclickhouse, wmongo, wtinydb, wmysql, wmariadb, wElasticsearch, wdatabricks, wSnowflake)",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "publisher": "wisrovi",
   "author": {
     "name": "William Rodriguez (wisrovi)",
@@ -132,6 +132,21 @@
         "command": "wdatabase.openRedisInspector",
         "title": "WDatabase: Open WRedis Commander & Live TTL Monitor",
         "icon": "$(server-process)"
+      },
+      {
+        "command": "wdatabase.openForensicDiff",
+        "title": "WDatabase: Open Time-Machine Forensic Diff (status=99)",
+        "icon": "$(history)"
+      },
+      {
+        "command": "wdatabase.exportDataDictionary",
+        "title": "WDatabase: Generate Database Schema Data Dictionary (Markdown)",
+        "icon": "$(book)"
+      },
+      {
+        "command": "wdatabase.crossEngineMigration",
+        "title": "WDatabase: Launch Cross-Engine Data Migration Pipeline Wizard",
+        "icon": "$(arrow-swap)"
       }
     ],
     "viewsContainers": {

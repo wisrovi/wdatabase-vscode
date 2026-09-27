@@ -100,6 +100,17 @@ export class WDatabaseCodeLensProvider implements vscode.CodeLensProvider {
                     arguments: [model.className],
                 })
             );
+
+            // 10. Time-Machine Forensic Diff Action (For ForensicModel)
+            if (model.isForensic) {
+                codeLenses.push(
+                    new vscode.CodeLens(range, {
+                        title: `$(history) [Time-Machine Diff]`,
+                        command: 'wdatabase.openForensicDiff',
+                        arguments: [model],
+                    })
+                );
+            }
         }
 
         return codeLenses;
