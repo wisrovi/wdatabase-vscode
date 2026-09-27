@@ -14,7 +14,7 @@ export async function generateMigrationCommand(modelName?: string): Promise<void
     if (!modelName) {
         modelName = await vscode.window.showInputBox({
             prompt: 'Enter the Pydantic DB Model class name for migration generation:',
-            placeHolder: 'e.g. Document'
+            placeHolder: 'e.g. Document, AnalyticsEvent, User'
         });
     }
 
@@ -24,8 +24,12 @@ export async function generateMigrationCommand(modelName?: string): Promise<void
 
     const engineChoice = await vscode.window.showQuickPick(
         [
-            { label: 'wpostgresql', description: 'PostgreSQL Migration Script (ALTER/CREATE TABLE + Forensic Trigger)' },
-            { label: 'wsqlite', description: 'SQLite Local Migration Script' }
+            { label: 'wpostgresql', description: 'PostgreSQL Migration (ALTER/CREATE TABLE + Forensic Trigger + TableSync)' },
+            { label: 'wsqlite', description: 'SQLite Local Migration (TableSync & WAL mode validation)' },
+            { label: 'wclickhouse', description: 'ClickHouse Schema Sync (Adding Columnar fields to MergeTree table)' },
+            { label: 'wmongo', description: 'MongoDB Collection Schema Validation & Index Migration' },
+            { label: 'wmysql', description: 'MySQL Schema Migration (InnoDB table sync)' },
+            { label: 'wmariadb', description: 'MariaDB Schema Migration (Aria/InnoDB table sync)' },
         ],
         { placeHolder: 'Select target database engine for migration:' }
     );
@@ -39,19 +43,42 @@ export async function generateMigrationCommand(modelName?: string): Promise<void
     const folder = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : '.';
     const migrationPath = path.join(folder, 'migrations', fileName);
 
+    let importBlock = '';
+    let upgradeLogic = '';
+
+    if (engineChoice.label === 'wpostgresql') {
+        importBlock = 'from wpostgresql import WPostgreSQL, ForensicModel\nfrom pydantic import BaseModel';
+        upgradeLogic = `    # 1. PostgreSQL Schema Migration with TableSync
+    # Automatically synchronizes columns without dropping existing data
+    print(f"[UPGRADE] Running PostgreSQL TableSync for model: ${modelName}")
+    # Example: db = WPostgreSQL(${modelName}, db_config)`;
+    } else if (engineChoice.label === 'wclickhouse') {
+        importBlock = 'from wclickhouse import WClickHouse\nfrom pydantic import BaseModel';
+        upgradeLogic = `    # 2. ClickHouse Columnar Table Sync
+    print(f"[UPGRADE] Syncing ClickHouse MergeTree columns for: ${modelName}")
+    # Example: db = WClickHouse(${modelName}, db_config)`;
+    } else if (engineChoice.label === 'wsqlite') {
+        importBlock = 'from wsqlite import WSQLite\nfrom pydantic import BaseModel';
+        upgradeLogic = `    # 3. SQLite Reactive Schema TableSync
+    print(f"[UPGRADE] Applying SQLite reactive migrations for: ${modelName}")
+    # Example: db = WSQLite(${modelName}, db_config)`;
+    } else {
+        importBlock = `from ${engineChoice.label} import ${engineChoice.label.toUpperCase()}\nfrom pydantic import BaseModel`;
+        upgradeLogic = `    # 4. Engine Table Sync
+    print(f"[UPGRADE] Applying schema update on ${engineChoice.label} for ${modelName}")`;
+    }
+
     const code = `"""
 Auto-generated migration script for ${modelName} (${engineChoice.label})
 Generated at: ${new Date().toISOString()}
+Author: William Steve Rodriguez Villamizar (Wisrovi)
 """
-from ${engineChoice.label} import ${engineChoice.label === 'wpostgresql' ? 'WPostgreSQL, ForensicModel' : 'WSQLite'}
-from pydantic import BaseModel
+${importBlock}
 import sys
 
 def upgrade():
     """Apply migration changes"""
-    print(f"[UPGRADE] Applying schema changes for model: ${modelName} on ${engineChoice.label}")
-    # Example table schema creation / alteration logic:
-    # ALTER TABLE ${modelName.toLowerCase()} ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+${upgradeLogic}
 
 def downgrade():
     """Revert migration changes"""
@@ -69,5 +96,5 @@ if __name__ == "__main__":
     const doc = await vscode.workspace.openTextDocument(uri);
     await vscode.window.showTextDocument(doc);
 
-    vscode.window.showInformationMessage(`⚡ Migration script created: ${path.basename(migrationPath)}`);
+    vscode.window.showInformationMessage(`⚡ Migration script created for ${engineChoice.label}: ${path.basename(migrationPath)}`);
 }

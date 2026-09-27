@@ -1,8 +1,8 @@
 {
   "name": "wdatabase-vscode",
   "displayName": "WDatabase Tools",
-  "description": "Intelligent control suite & visual tools for the w database ecosystem (wpostgresql, wredis, wsqlite, wtinydb, wmongo, etc.)",
-  "version": "1.0.0",
+  "description": "Intelligent control suite & visual tools for the wisrovi database ecosystem (wpostgresql, wredis, wsqlite, wclickhouse, wmongo, wtinydb, wmysql, wmariadb, wElasticsearch, wdatabricks, wSnowflake)",
+  "version": "1.1.0",
   "publisher": "wisrovi",
   "author": {
     "name": "William Rodriguez (wisrovi)",

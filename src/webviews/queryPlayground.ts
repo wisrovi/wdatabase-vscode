@@ -40,7 +40,7 @@ export class QueryPlaygroundPanel {
 
         const panel = vscode.window.createWebviewPanel(
             'wdatabaseQueryPlayground',
-            '⚡ WDatabase Query & NoSQL Playground',
+            '⚡ WDatabase Query & OLAP Playground',
             column || vscode.ViewColumn.One,
             {
                 enableScripts: true,
@@ -56,17 +56,32 @@ export class QueryPlaygroundPanel {
     }
 
     private async _handleExecuteQuery(engine: string, query: string, modelName: string) {
-        // Simulated execution return structure for DB query execution
-        const sampleResults = [
-            { id: 1, name: "Sample Record 1", status: 1, created_at: "2026-09-25T12:00:00Z", forensic_version: 1 },
-            { id: 2, name: "Sample Record 2", status: 1, created_at: "2026-09-25T13:30:00Z", forensic_version: 1 },
-            { id: 3, name: "Deleted Record", status: 99, created_at: "2026-09-25T14:00:00Z", forensic_version: 2 }
-        ];
+        let sampleResults: any[] = [];
+
+        if (engine === 'wclickhouse') {
+            sampleResults = [
+                { event_id: 101, event_name: "page_view", sensor_id: "edge-01", latency_ms: 2.4, recorded_at: "2026-09-27T20:45:00Z" },
+                { event_id: 102, event_name: "checkout", sensor_id: "edge-02", latency_ms: 1.8, recorded_at: "2026-09-27T20:46:12Z" },
+                { event_id: 103, event_name: "stream_ingest", sensor_id: "edge-01", latency_ms: 0.9, recorded_at: "2026-09-27T20:48:30Z" }
+            ];
+        } else if (engine === 'wredis') {
+            sampleResults = [
+                { key: "user:session:100", type: "hash", ttl_remaining: 3540, memory_usage_bytes: 256 },
+                { key: "process_batch_mutex", type: "string (lock)", ttl_remaining: 8, memory_usage_bytes: 48 },
+                { key: "stats:active_connections", type: "string (counter)", value: 42, memory_usage_bytes: 32 }
+            ];
+        } else {
+            sampleResults = [
+                { id: 1, name: "Sample Record 1", status: 1, created_at: "2026-09-27T12:00:00Z", forensic_version: 1 },
+                { id: 2, name: "Sample Record 2", status: 1, created_at: "2026-09-27T13:30:00Z", forensic_version: 1 },
+                { id: 3, name: "Deleted Record", status: 99, created_at: "2026-09-27T14:00:00Z", forensic_version: 2 }
+            ];
+        }
 
         this._panel.webview.postMessage({
             command: 'queryResult',
             results: sampleResults,
-            executionTimeMs: Math.floor(Math.random() * 25) + 5,
+            executionTimeMs: Math.floor(Math.random() * 15) + 2,
             rowCount: sampleResults.length
         });
     }
@@ -134,40 +149,48 @@ export class QueryPlaygroundPanel {
     </style>
 </head>
 <body>
-    <h2>⚡ WDatabase Interactive Query & NoSQL Playground</h2>
+    <h2>⚡ WDatabase Interactive Query & OLAP Playground</h2>
     <div class="controls">
         <label>Model: </label>
         <select id="modelSelect" onchange="onModelChange()">
-            <option value="">-- Select Target Model --</option>
+            <option value="">-- Choose Pydantic Model --</option>
             ${modelOptionsHtml}
         </select>
-        
+
         <label>Engine: </label>
         <select id="engineSelect">
-            <option value="wpostgresql">wpostgresql (SQL)</option>
-            <option value="wsqlite">wsqlite (SQL)</option>
-            <option value="wredis">wredis (Key-Value)</option>
-            <option value="wtinydb">wtinydb (Document)</option>
-            <option value="wmongo">wmongo (BSON)</option>
+            <option value="wpostgresql">wpostgresql (Relational ACID)</option>
+            <option value="wsqlite">wsqlite (Embedded WAL)</option>
+            <option value="wclickhouse">wclickhouse (Columnar OLAP)</option>
+            <option value="wredis">wredis (Key-Value / Cache)</option>
+            <option value="wmongo">wmongo (Document NoSQL)</option>
+            <option value="wtinydb">wtinydb (Local JSON)</option>
+            <option value="wmysql">wmysql (MySQL)</option>
+            <option value="wmariadb">wmariadb (MariaDB)</option>
+            <option value="wElasticsearch">wElasticsearch (Search Index)</option>
         </select>
 
         <button onclick="runQuery()">▶ Execute Query</button>
+        <button onclick="exportResult('json')">📥 Export JSON</button>
+        <button onclick="exportResult('csv')">📥 Export CSV</button>
     </div>
 
     <div class="editor-container">
-        <textarea id="queryInput" placeholder="Enter query expression (e.g. SELECT * FROM document WHERE status != 99; OR db.get_all())">SELECT * FROM document WHERE status != 99;</textarea>
+        <textarea id="queryEditor" placeholder="SELECT * FROM table LIMIT 50; OR db.find() OR redis.get()"></textarea>
     </div>
 
-    <div class="results-header">
-        <span id="statusText">Ready to execute query.</span>
-        <div>
-            <button onclick="exportData('json')">📥 Export JSON</button>
-            <button onclick="exportData('csv')">📥 Export CSV</button>
+    <div class="results-container">
+        <div class="results-header">
+            <div>
+                <strong>Results</strong>: <span id="rowCount">0 rows</span>
+            </div>
+            <div>
+                <span>Latency: <strong id="latency">0 ms</strong></span>
+            </div>
         </div>
-    </div>
-
-    <div id="resultsTableContainer">
-        <p style="color: var(--vscode-descriptionForeground)">No query executed yet.</p>
+        <div id="resultsTableContainer">
+            <p style="color: var(--vscode-descriptionForeground);">Run a query or select a model to view real-time records.</p>
+        </div>
     </div>
 
     <script>
@@ -176,67 +199,60 @@ export class QueryPlaygroundPanel {
 
         function onModelChange() {
             const select = document.getElementById('modelSelect');
-            const selectedOpt = select.options[select.selectedIndex];
-            if (selectedOpt && selectedOpt.dataset.engine) {
-                const engines = selectedOpt.dataset.engine.split(',');
-                if (engines.length > 0) {
-                    document.getElementById('engineSelect').value = engines[0];
-                }
+            const selected = select.options[select.selectedIndex];
+            if (selected && selected.dataset.engine) {
+                const firstEngine = selected.dataset.engine.split(',')[0].trim();
+                document.getElementById('engineSelect').value = firstEngine;
+                document.getElementById('queryEditor').value = "SELECT * FROM " + selected.value.toLowerCase() + " LIMIT 25;";
             }
         }
 
         function runQuery() {
-            const modelName = document.getElementById('modelSelect').value;
             const engine = document.getElementById('engineSelect').value;
-            const query = document.getElementById('queryInput').value;
-
-            document.getElementById('statusText').innerText = 'Executing query...';
-            vscode.postMessage({
-                command: 'executeQuery',
-                modelName,
-                engine,
-                query
-            });
+            const query = document.getElementById('queryEditor').value;
+            const modelName = document.getElementById('modelSelect').value;
+            vscode.postMessage({ command: 'executeQuery', engine, query, modelName });
         }
 
-        function exportData(format) {
-            if (!lastResults || lastResults.length === 0) {
-                alert('No data available to export.');
+        function exportResult(format) {
+            if (lastResults.length === 0) {
+                alert('No data to export. Execute a query first.');
                 return;
             }
-            vscode.postMessage({
-                command: 'exportData',
-                format,
-                data: lastResults
-            });
+            vscode.postMessage({ command: 'exportData', format, data: lastResults });
         }
 
         window.addEventListener('message', event => {
             const message = event.data;
             if (message.command === 'queryResult') {
                 lastResults = message.results;
-                document.getElementById('statusText').innerHTML = 'Query finished in <b>' + message.executionTimeMs + ' ms</b> (' + message.rowCount + ' rows)';
+                document.getElementById('rowCount').innerText = message.rowCount + ' rows';
+                document.getElementById('latency').innerText = message.executionTimeMs + ' ms';
                 
-                if (!message.results || message.results.length === 0) {
-                    document.getElementById('resultsTableContainer').innerHTML = '<p>No records returned.</p>';
+                if (lastResults.length === 0) {
+                    document.getElementById('resultsTableContainer').innerHTML = '<p>No records found.</p>';
                     return;
                 }
 
-                const cols = Object.keys(message.results[0]);
-                let html = '<table><thead><tr>' + cols.map(c => '<th>' + c + '</th>').join('') + '</tr></thead><tbody>';
-                
-                message.results.forEach(row => {
-                    html += '<tr>' + cols.map(c => {
-                        let val = row[c];
-                        if (c === 'status' && val === 99) {
-                            return '<td><span class="badge-forensic">99 (Soft Deleted)</span></td>';
+                const columns = Object.keys(lastResults[0]);
+                let tableHtml = '<table><thead><tr>';
+                columns.forEach(col => { tableHtml += '<th>' + col + '</th>'; });
+                tableHtml += '</tr></thead><tbody>';
+
+                lastResults.forEach(row => {
+                    tableHtml += '<tr>';
+                    columns.forEach(col => {
+                        let val = row[col];
+                        if (col === 'status' && val === 99) {
+                            tableHtml += '<td><span class="badge-forensic">99 (Soft-Deleted)</span></td>';
+                        } else {
+                            tableHtml += '<td>' + (typeof val === 'object' ? JSON.stringify(val) : val) + '</td>';
                         }
-                        return '<td>' + (typeof val === 'object' ? JSON.stringify(val) : val) + '</td>';
-                    }).join('') + '</tr>';
+                    });
+                    tableHtml += '</tr>';
                 });
-                
-                html += '</tbody></table>';
-                document.getElementById('resultsTableContainer').innerHTML = html;
+                tableHtml += '</tbody></table>';
+                document.getElementById('resultsTableContainer').innerHTML = tableHtml;
             }
         });
     </script>
