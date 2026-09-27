@@ -74,6 +74,15 @@ export class WDatabaseCodeLensProvider implements vscode.CodeLensProvider {
                 })
             );
 
+            // 7. Run Test Action
+            codeLenses.push(
+                new vscode.CodeLens(range, {
+                    title: `$(play) [Run Tests]`,
+                    command: 'wdatabase.runModelTests',
+                    arguments: [model.className],
+                })
+            );
+
             // 7. Query Playground Action
             codeLenses.push(
                 new vscode.CodeLens(range, {

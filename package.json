@@ -2,7 +2,7 @@
   "name": "wdatabase-vscode",
   "displayName": "WDatabase Tools",
   "description": "Intelligent control suite & visual tools for the wisrovi database ecosystem (wpostgresql, wredis, wsqlite, wclickhouse, wmongo, wtinydb, wmysql, wmariadb, wElasticsearch, wdatabricks, wSnowflake)",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "publisher": "wisrovi",
   "author": {
     "name": "William Rodriguez (wisrovi)",
@@ -99,9 +99,29 @@
         "icon": "$(sparkle)"
       },
       {
+        "command": "wdatabase.runModelTests",
+        "title": "WDatabase: Run Pytest Suite for Model",
+        "icon": "$(play)"
+      },
+      {
+        "command": "wdatabase.reverseEngineerDB",
+        "title": "WDatabase: Reverse Engineer Existing DB to Pydantic Models",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "wdatabase.manageContainer",
+        "title": "WDatabase: Spin Up Local Dev Database Container (Docker)",
+        "icon": "$(server)"
+      },
+      {
         "command": "wdatabase.testConnection",
         "title": "WDatabase: Test Database Connectivity",
         "icon": "$(check)"
+      },
+      {
+        "command": "wdatabase.addVaultSecret",
+        "title": "WDatabase: Add New Secret to WAuth Vault",
+        "icon": "$(lock)"
       }
     ],
     "viewsContainers": {
@@ -118,6 +138,11 @@
         {
           "id": "wdatabaseExplorer",
           "name": "Bound DB Models & Engines",
+          "icon": "icon.png"
+        },
+        {
+          "id": "wdatabaseVault",
+          "name": "WAuth Secret Vault (AES-256)",
           "icon": "icon.png"
         }
       ]

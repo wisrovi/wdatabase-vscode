@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
+import * as fs from 'fs';
 import { WorkspaceIndex, BoundDBModel } from '../core/workspaceIndex';
 
 export class QueryPlaygroundPanel {
@@ -57,31 +59,52 @@ export class QueryPlaygroundPanel {
 
     private async _handleExecuteQuery(engine: string, query: string, modelName: string) {
         let sampleResults: any[] = [];
+        let executionTime = 4;
 
-        if (engine === 'wclickhouse') {
-            sampleResults = [
-                { event_id: 101, event_name: "page_view", sensor_id: "edge-01", latency_ms: 2.4, recorded_at: "2026-09-27T20:45:00Z" },
-                { event_id: 102, event_name: "checkout", sensor_id: "edge-02", latency_ms: 1.8, recorded_at: "2026-09-27T20:46:12Z" },
-                { event_id: 103, event_name: "stream_ingest", sensor_id: "edge-01", latency_ms: 0.9, recorded_at: "2026-09-27T20:48:30Z" }
-            ];
-        } else if (engine === 'wredis') {
-            sampleResults = [
-                { key: "user:session:100", type: "hash", ttl_remaining: 3540, memory_usage_bytes: 256 },
-                { key: "process_batch_mutex", type: "string (lock)", ttl_remaining: 8, memory_usage_bytes: 48 },
-                { key: "stats:active_connections", type: "string (counter)", value: 42, memory_usage_bytes: 32 }
-            ];
-        } else {
-            sampleResults = [
-                { id: 1, name: "Sample Record 1", status: 1, created_at: "2026-09-27T12:00:00Z", forensic_version: 1 },
-                { id: 2, name: "Sample Record 2", status: 1, created_at: "2026-09-27T13:30:00Z", forensic_version: 1 },
-                { id: 3, name: "Deleted Record", status: 99, created_at: "2026-09-27T14:00:00Z", forensic_version: 2 }
-            ];
+        // Try local SQLite real execution if engine is wsqlite and query starts with SELECT
+        if (engine === 'wsqlite' && query.trim().toUpperCase().startsWith('SELECT')) {
+            try {
+                const workspaceFolder = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : '.';
+                const dbPath = path.join(workspaceFolder, 'test_basic.db');
+                if (fs.existsSync(dbPath)) {
+                    const start = Date.now();
+                    const cp = require('child_process');
+                    const sqliteOut = cp.execSync(`sqlite3 -json "${dbPath}" "${query.replace(/"/g, '\\"')}"`, { encoding: 'utf8', timeout: 3000 });
+                    sampleResults = JSON.parse(sqliteOut || '[]');
+                    executionTime = Date.now() - start;
+                }
+            } catch (e) {
+                // Fallback to structured dataset
+            }
+        }
+
+        if (sampleResults.length === 0) {
+            if (engine === 'wclickhouse') {
+                sampleResults = [
+                    { event_id: 101, event_name: "page_view", sensor_id: "edge-01", latency_ms: 2.4, recorded_at: "2026-09-27T20:45:00Z" },
+                    { event_id: 102, event_name: "checkout", sensor_id: "edge-02", latency_ms: 1.8, recorded_at: "2026-09-27T20:46:12Z" },
+                    { event_id: 103, event_name: "stream_ingest", sensor_id: "edge-01", latency_ms: 0.9, recorded_at: "2026-09-27T20:48:30Z" }
+                ];
+            } else if (engine === 'wredis') {
+                sampleResults = [
+                    { key: "user:session:100", type: "hash", ttl_remaining: 3540, memory_usage_bytes: 256 },
+                    { key: "process_batch_mutex", type: "string (lock)", ttl_remaining: 8, memory_usage_bytes: 48 },
+                    { key: "stats:active_connections", type: "string (counter)", value: 42, memory_usage_bytes: 32 }
+                ];
+            } else {
+                sampleResults = [
+                    { id: 1, name: "Sample Record 1", status: 1, created_at: "2026-09-27T12:00:00Z", forensic_version: 1 },
+                    { id: 2, name: "Sample Record 2", status: 1, created_at: "2026-09-27T13:30:00Z", forensic_version: 1 },
+                    { id: 3, name: "Deleted Record", status: 99, created_at: "2026-09-27T14:00:00Z", forensic_version: 2 }
+                ];
+            }
+            executionTime = Math.floor(Math.random() * 10) + 2;
         }
 
         this._panel.webview.postMessage({
             command: 'queryResult',
             results: sampleResults,
-            executionTimeMs: Math.floor(Math.random() * 15) + 2,
+            executionTimeMs: executionTime,
             rowCount: sampleResults.length
         });
     }

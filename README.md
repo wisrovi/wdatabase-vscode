@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://open-vsx.org/extension/wisrovi/wdatabase-vscode"><img src="https://img.shields.io/badge/Open%20VSX-v1.2.0-blue?style=for-the-badge&logo=visualstudiocode" alt="Open VSX" /></a>
+  <a href="https://open-vsx.org/extension/wisrovi/wdatabase-vscode"><img src="https://img.shields.io/badge/Open%20VSX-v1.3.0-blue?style=for-the-badge&logo=visualstudiocode" alt="Open VSX" /></a>
   <a href="https://linkedin.com/in/wisrovi-rodriguez"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
   <a href="https://wisrovi.dev"><img src="https://img.shields.io/badge/Author-wisrovi.dev-111827?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Portal" /></a>
   <a href="https://orcid.org/0009-0005-0710-1861"><img src="https://img.shields.io/badge/ORCID-0009--0005--0710--1861-A6CE39?style=for-the-badge&logo=orcid&logoColor=white" alt="ORCID" /></a>
@@ -10,15 +10,18 @@
 
 **WDatabase Tools** is the intelligent control suite & visual IDE extension for the `w` database library ecosystem (`wpostgresql`, `wredis`, `wsqlite`, `wclickhouse`, `wmongo`, `wtinydb`, `wmysql`, `wmariadb`, `wElasticsearch`, `wdatabricks`, `wSnowflake`, and `wauth`).
 
-## 🌟 Key Features (v1.2.0)
+## 🌟 Key Features (v1.3.0)
 
 - **Zero-Noise DB-Binding Engine**: Automatically distinguishes Pydantic models bound to database repositories from plain API schemas or settings.
-- **WPipe Pipeline Integration**: Instantly generate class-based `@step` ingestion and audit components from any Pydantic database model via CodeLens.
-- **Synthetic Seed & Mock Data Generator**: Generates realistic synthetic mock data scripts to populate development databases in seconds.
-- **WAuth Vault Integration**: Detects hardcoded plaintext passwords and suggests securing them with AES-256 Fernet salted machine storage.
+- **🔐 WAuth Secret Vault Explorer**: Visual sidebar panel to inspect, toggle reveal, encrypt, and manage machine-salted AES-256 Fernet secrets in `secrets.db`.
+- **🔄 Database Reverse Engineering**: Introspect existing live database schemas (PostgreSQL, SQLite, ClickHouse, MySQL) and generate corresponding Pydantic v2 and `ForensicModel` classes in one click.
+- **🐳 Local Database Container Orchestrator**: Spin up ephemeral, isolated development containers (PostgreSQL, Redis Stack, ClickHouse, Mongo) directly from the IDE.
+- **🧪 1-Click Pytest Test Runner**: CodeLens action `[$(play) Run Tests]` and command palette to execute integration test suites directly in the integrated terminal.
+- **🚀 WPipe Pipeline Integration**: Instantly generate class-based `@step` ingestion and audit components from any Pydantic database model via CodeLens.
+- **🌱 Synthetic Seed & Mock Data Generator**: Generates realistic synthetic mock data scripts to populate development databases in seconds.
+- **⚡ Live Query & OLAP Playground**: Execute real queries against local SQLite and inspect latency metrics, soft-deleted records (`status=99`), and export data to JSON/CSV.
 - **Advanced OLAP & Concurrency Diagnostics**: Warns against single-row insertion loops in ClickHouse (recommending `insert_many` or `insert_arrow`), flags blocking `keys('*')` in Redis clusters, and recommends WAL mode for multithreaded SQLite.
 - **Interactive ERD Diagram Visualizer**: Generates dynamic Mermaid Entity-Relationship Diagrams with one-click clipboard copying and export.
-- **Multi-Engine Query & OLAP Playground**: Execute test queries, inspect latency metrics, view soft-deleted records (`status=99`), and export data to JSON/CSV.
 
 ## Supported Database Libraries
 

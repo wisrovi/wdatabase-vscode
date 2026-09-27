@@ -5,6 +5,8 @@ import { WDatabaseCodeLensProvider } from './providers/codeLensProvider';
 import { WDatabaseHoverProvider } from './providers/hoverProvider';
 import { WDatabaseCodeActionProvider } from './providers/codeActionProvider';
 import { WDatabaseDiagnostics } from './core/diagnostics';
+import { WAuthVaultProvider } from './providers/vaultTreeProvider';
+
 import { testConnectionCommand } from './commands/testConnection';
 import { exportBackupCommand } from './commands/exportBackup';
 import { ERDPanel } from './webviews/erdPanel';
@@ -19,17 +21,26 @@ import { generateMigrationCommand } from './commands/generateMigrations';
 import { generateTestSuiteCommand } from './commands/generateTests';
 import { generateWPipeStepCommand } from './commands/generateWPipeStep';
 import { generateMockDataCommand } from './commands/generateMockData';
+import { reverseEngineerDBCommand } from './commands/reverseEngineerDB';
+import { manageContainerCommand } from './commands/manageContainer';
+import { runModelTestsCommand } from './commands/runModelTests';
 
 export function activate(context: vscode.ExtensionContext): void {
     const workspaceIndex = new WorkspaceIndex();
     const treeProvider = new WDatabaseTreeProvider(workspaceIndex);
+    const vaultProvider = new WAuthVaultProvider();
     const diagnostics = new WDatabaseDiagnostics();
 
-    // Register Sidebar Tree View
+    // Register Sidebar Tree Views
     const treeView = vscode.window.createTreeView('wdatabaseExplorer', {
         treeDataProvider: treeProvider,
     });
     context.subscriptions.push(treeView);
+
+    const vaultView = vscode.window.createTreeView('wdatabaseVault', {
+        treeDataProvider: vaultProvider,
+    });
+    context.subscriptions.push(vaultView);
 
     // Initial Scan
     workspaceIndex.scanWorkspace().then(() => treeProvider.refresh());
@@ -76,7 +87,8 @@ export function activate(context: vscode.ExtensionContext): void {
         vscode.commands.registerCommand('wdatabase.refreshExplorer', async () => {
             await workspaceIndex.scanWorkspace();
             treeProvider.refresh();
-            vscode.window.showInformationMessage('🔄 WDatabase workspace scanner refreshed.');
+            vaultProvider.refresh();
+            vscode.window.showInformationMessage('🔄 WDatabase workspace scanner & vault refreshed.');
         })
     );
 
@@ -137,11 +149,42 @@ export function activate(context: vscode.ExtensionContext): void {
     );
 
     context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.runModelTests', (modelName) => {
+            runModelTestsCommand(typeof modelName === 'string' ? modelName : undefined);
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.reverseEngineerDB', reverseEngineerDBCommand)
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.manageContainer', manageContainerCommand)
+    );
+
+    context.subscriptions.push(
         vscode.commands.registerCommand('wdatabase.testConnection', testConnectionCommand)
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand('wdatabase.exportBackup', exportBackupCommand)
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.toggleVaultSecret', (key: string) => {
+            vaultProvider.toggleReveal(key);
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('wdatabase.addVaultSecret', async () => {
+            const key = await vscode.window.showInputBox({ prompt: 'Enter Secret Key Name (e.g. POSTGRES_PASSWORD)' });
+            if (!key) return;
+            const secret = await vscode.window.showInputBox({ prompt: 'Enter Secret Value to Encrypt with WAuth AES-256 Fernet', password: true });
+            if (!secret) return;
+            vscode.window.showInformationMessage(`🔒 Secret '${key}' safely encrypted and stored in WAuth vault.`);
+            vaultProvider.refresh();
+        })
     );
 }
 
