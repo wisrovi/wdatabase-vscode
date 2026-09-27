@@ -73,3 +73,16 @@ Tests verify:
 1. AST scanner parsing of `BaseModel` and `ForensicModel` classes.
 2. Filtering out un-bound non-DB Pydantic models.
 3. Attributing models to `wpostgresql`, `wsqlite`, `wredis`, `wtinydb`, etc.
+
+---
+
+## 👤 Autor & Afiliación Oficial
+
+* **William Steve Rodriguez Villamizar (Wisrovi)**
+* **Cargo:** Principal AI Engineer & Applied AI Solutions Architect | Scientific Researcher
+* 📧 **Email:** [wisrovi.rodriguez@gmail.com](mailto:wisrovi.rodriguez@gmail.com) / [wisrovi@wisrovi.dev](mailto:wisrovi@wisrovi.dev)
+* 🌐 **Portal Oficial:** [wisrovi.dev](https://wisrovi.dev)
+* 💼 **LinkedIn:** [wisrovi-rodriguez](https://www.linkedin.com/in/wisrovi-rodriguez/)
+* 🆔 **ORCID:** [0009-0005-0710-1861](https://orcid.org/0009-0005-0710-1861)
+* 📦 **PyPI:** [pypi.org/user/wisrovi/](https://pypi.org/user/wisrovi/)
+* 🐙 **GitHub:** [@wisrovi](https://github.com/wisrovi)
